@@ -18,6 +18,19 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+.question_btn {
+  width: 100%;
+  margin:5px;
+}
+
+.question_btn:hover{
+  border:1px solid #b00016;
+}
+
+.cs-conversation-header__actions svg path {
+  fill:#b00016!important;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

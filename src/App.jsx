@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
-import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, ConversationHeader, Avatar, VoiceCallButton, VideoCallButton, InfoButton } from '@chatscope/chat-ui-kit-react';
+import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, ConversationHeader, Avatar, VoiceCallButton, VideoCallButton, InfoButton, Sidebar, ExpansionPanel } from '@chatscope/chat-ui-kit-react';
 import { createClient } from "@supabase/supabase-js";
 import pic from './assets/vista.svg';
 
@@ -18,7 +18,7 @@ const systemMessage = { //  Explain things like you're talking to a software pro
 function App() {
   const [messages, setMessages] = useState([
     {
-      message: "Hello, I'm Stewie! Ask me anything about VistaJet!",
+      message: "Hello and welcome to the VistaJet chatbot. I am here to help you with any queries you may have. On the right hand side are quick links, why not click on one of the button to find out more. Or ask your own question.",
       sentTime: "just now",
       sender: "ChatGPT"
     }
@@ -106,7 +106,7 @@ function App() {
 
   return (
     <div className="App">
-      <div style={{ position:"relative", height: "600px", width: "357px"  }}>
+      <div style={{ position:"relative", height: "600px", width: "500px"  }}>
         <MainContainer>
           <ChatContainer>    
             
@@ -115,26 +115,48 @@ function App() {
                       <ConversationHeader.Content>
                         <span style={{
                 color: "#b00016",
-                alignSelf: "flex-center"
+                alignSelf: "flex-center",
+                textAlign:"center"
               }}>VistaJet ChatBot</span>
                       </ConversationHeader.Content>
                       <ConversationHeader.Actions>                                                                             
-                        <VoiceCallButton title="Start voice call" />
-                        <VideoCallButton title="Start video call" />
-                        <InfoButton title="Show info" />
+                        <a href="tel:+447830150627"><VoiceCallButton title="Start voice call" /></a>
                       </ConversationHeader.Actions>                      
                   </ConversationHeader>   
             <MessageList 
               scrollBehavior="smooth" 
-              typingIndicator={isTyping ? <TypingIndicator content="Stewie is typing" /> : null}
+              typingIndicator={isTyping ? <TypingIndicator content="VistaBot is typing" /> : null}
             >
               {messages.map((message, i) => {
                 console.log(message)
-                return <Message key={i} model={message} />
+                return <Message key={i} model={message} >
+                  <Avatar src={pic} name="Joe" />
+                  </Message>
               })}
             </MessageList>
             <MessageInput placeholder="Type message here" attachButton={false} onSend={handleSend} />        
           </ChatContainer>
+          <Sidebar position="right">
+                    <ExpansionPanel open title="Memberships">
+                      <button className='question_btn' onClick={() => handleSend('Tell me about the Program membership')}>What is your Program membership?</button>
+                      <button className='question_btn' onClick={() => handleSend('Tell me about the VJ25 membership')}>What is your VJ25 membership?</button>
+                      <button className='question_btn' onClick={() => handleSend('Tell me about the Corporate membership')}>What is your Corporate membership?</button>
+                    </ExpansionPanel>
+                    <ExpansionPanel title="Fleet">
+                      <button className='question_btn' onClick={() => handleSend('Tell me about the VistaJet Global fleet')}>Global Fleet</button>
+                      <button className='question_btn' onClick={() => handleSend('Tell me about the VistaJet continental fleet')}>Continental Fleet</button>
+                    </ExpansionPanel>
+                    <ExpansionPanel title="Experience">
+                      <button className='question_btn' onClick={() => handleSend('Tell me about the VistaJet Private Dining')}>Private Dining</button>
+                      <button className='question_btn' onClick={() => handleSend('Tell me about Wine in the sky')}>Wine in the sky</button>
+                      <button className='question_btn' onClick={() => handleSend('Tell me about the Adventures in the sky')}>Adventures in the sky</button>
+                      <button className='question_btn' onClick={() => handleSend('Tell me about VistaPet')}>VistaPet</button>
+                    </ExpansionPanel>
+                    <ExpansionPanel title="Broker questions">
+                    <button className='question_btn' onClick={() => handleSend('list the global fleet air crafts?')}>What jets are in your Global Fleet?</button>
+                    <button className='question_btn' onClick={() => handleSend('list the continental fleet air crafts?')}>What jets are in your Continental Fleet?</button>
+                    </ExpansionPanel>                    
+                  </Sidebar>               
         </MainContainer>
       </div>
     </div>
