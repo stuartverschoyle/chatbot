@@ -10,7 +10,6 @@ const supabaseClient = createClient(import.meta.env.VITE_API_URL, import.meta.en
 
 const API_KEY = import.meta.env.VITE_OPENAIAPIKEY;
 
-console.log(API_KEY);
 // "Explain things like you would to a 10 year old learning how to code."
 const systemMessage = { //  Explain things like you're talking to a software professional with 5 years of experience.
   "role": "system", "content": "Explain things like you're talking to a high networth individuals"
