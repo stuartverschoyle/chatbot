@@ -8,7 +8,7 @@ import pic from './assets/vista.svg';
 const supabaseClient = createClient("https://xiwtnuwmnvbcgpuslomn.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhpd3RudXdtbnZiY2dwdXNsb21uIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODUwMjY2MjUsImV4cCI6MjAwMDYwMjYyNX0.9Mdc6ZeVafJ7M9z2YzQqYA_TLSuCmJkhh6gn4h0Uj_U");
 
 
-const API_KEY = "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";
+const API_KEY = "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";
 // "Explain things like you would to a 10 year old learning how to code."
 const systemMessage = { //  Explain things like you're talking to a software professional with 5 years of experience.
   "role": "system", "content": "Explain things like you're talking to a high networth individuals"
@@ -118,7 +118,7 @@ function App() {
               }}>VistaJet ChatBot</span>
                       </ConversationHeader.Content>
                       <ConversationHeader.Actions>                                                                             
-                        <a href="tel:+4407376367830"><VoiceCallButton title="Start voice call" /></a>
+                        <VoiceCallButton title="Start voice call" />
                         <VideoCallButton title="Start video call" />
                         <InfoButton title="Show info" />
                       </ConversationHeader.Actions>                      
