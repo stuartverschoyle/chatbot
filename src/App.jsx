@@ -5,10 +5,12 @@ import { MainContainer, ChatContainer, MessageList, Message, MessageInput, Typin
 import { createClient } from "@supabase/supabase-js";
 import pic from './assets/vista.svg';
 
-const supabaseClient = createClient("https://xiwtnuwmnvbcgpuslomn.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhpd3RudXdtbnZiY2dwdXNsb21uIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODUwMjY2MjUsImV4cCI6MjAwMDYwMjYyNX0.9Mdc6ZeVafJ7M9z2YzQqYA_TLSuCmJkhh6gn4h0Uj_U");
+const supabaseClient = createClient(import.meta.env.VITE_API_URL, import.meta.env.VITE_SUPABASE_API_KEY);
 
 
-const API_KEY = "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";
+const API_KEY = import.meta.env.VITE_OPENAIAPIKEY;
+
+console.log(API_KEY);
 // "Explain things like you would to a 10 year old learning how to code."
 const systemMessage = { //  Explain things like you're talking to a software professional with 5 years of experience.
   "role": "system", "content": "Explain things like you're talking to a high networth individuals"
