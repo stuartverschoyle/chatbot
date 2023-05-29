@@ -17,6 +17,14 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
+.chatContainer {
+  position:relative;
+  height: 600px;
+  min-height:600px;
+  width: 500px;
+}
+
+.save-btn {font-size: 12px;background-color: #b00016;color: #fff; position:absolute;bottom:10px;left:0;right:0;margin:0 auto;width:90%;}
 
 .question_btn {
   width: 100%;

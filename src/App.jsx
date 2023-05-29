@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import React, { useRef, useState } from 'react';
+import html2pdf from 'html2pdf.js';
+
 import './App.css'
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, ConversationHeader, Avatar, VoiceCallButton, VideoCallButton, InfoButton, Sidebar, ExpansionPanel } from '@chatscope/chat-ui-kit-react';
@@ -18,7 +20,7 @@ const systemMessage = { //  Explain things like you're talking to a software pro
 function App() {
   const [messages, setMessages] = useState([
     {
-      message: "Hello and welcome to the VistaJet chatbot. I am here to help you with any queries you may have. On the right hand side are quick links, why not click on one of the button to find out more. Or ask your own question.",
+      message: "Hello and welcome to the VistaJet chatbot. I am here to help you with any queries you may have. On the right hand side are quick links, why not click on one of the button to find out more. Or ask your own question below.",
       sentTime: "just now",
       sender: "ChatGPT"
     }
@@ -104,9 +106,27 @@ function App() {
     });
   }
 
+
+  const chatContainerRef = useRef(null);
+
+  const handleSavePDF = () => {
+    const chatContainer = chatContainerRef.current;
+    document.getElementById("test").style.height = "auto";
+    html2pdf()
+      .set({ margin: 10 })
+      .from(chatContainer)
+      .save('content.pdf');
+
+      function myMessage() {
+        document.getElementById("test").style.height = "600px";
+      }
+      setTimeout(myMessage, 1);      
+
+  };
+
   return (
     <div className="App">
-      <div style={{ position:"relative", height: "600px", width: "500px"  }}>
+      <div id="test" className="chatContainer" ref={chatContainerRef}>
         <MainContainer>
           <ChatContainer>    
             
@@ -155,7 +175,9 @@ function App() {
                     <ExpansionPanel title="Broker questions">
                     <button className='question_btn' onClick={() => handleSend('list the global fleet air crafts?')}>What jets are in your Global Fleet?</button>
                     <button className='question_btn' onClick={() => handleSend('list the continental fleet air crafts?')}>What jets are in your Continental Fleet?</button>
-                    </ExpansionPanel>                    
+                    </ExpansionPanel>       
+                    <button className='save-btn' onClick={handleSavePDF}>Save chat (pdf)</button>
+            
                   </Sidebar>               
         </MainContainer>
       </div>
