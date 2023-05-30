@@ -6,6 +6,7 @@ import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, ConversationHeader, Avatar, VoiceCallButton, VideoCallButton, InfoButton, Sidebar, ExpansionPanel } from '@chatscope/chat-ui-kit-react';
 import { createClient } from "@supabase/supabase-js";
 import pic from './assets/vista.svg';
+import copyPDF from './assets/copy.svg';
 
 const supabaseClient = createClient(import.meta.env.VITE_API_URL, import.meta.env.VITE_SUPABASE_API_KEY);
 
@@ -20,7 +21,7 @@ const systemMessage = { //  Explain things like you're talking to a software pro
 function App() {
   const [messages, setMessages] = useState([
     {
-      message: "Hello and welcome to the VistaJet chatbot. I am here to help you with any queries you may have. On the right hand side are quick links, why not click on one of the button to find out more. Or ask your own question below.",
+      message: "<p>Hello and welcome to the VistaJet chatbot. I am here to help you with any queries you may have.</p><p>On the right hand side are quick links, why not click on one of the button to find out more. Or ask your own question below.</p>",
       sentTime: "just now",
       sender: "ChatGPT"
     }
@@ -111,22 +112,15 @@ function App() {
 
   const handleSavePDF = () => {
     const chatContainer = chatContainerRef.current;
-    document.getElementById("test").style.height = "auto";
     html2pdf()
       .set({ margin: 10 })
       .from(chatContainer)
-      .save('content.pdf');
-
-      function myMessage() {
-        document.getElementById("test").style.height = "600px";
-      }
-      setTimeout(myMessage, 1);      
-
-  };
+      .save('vistajet-chat-transcription.pdf');
+    };
 
   return (
     <div className="App">
-      <div id="test" className="chatContainer" ref={chatContainerRef}>
+      <div className="chatContainer">
         <MainContainer>
           <ChatContainer>    
             
@@ -141,18 +135,20 @@ function App() {
                       </ConversationHeader.Content>
                       <ConversationHeader.Actions>                                                                             
                         <a href="tel:+447830150627"><VoiceCallButton title="Start voice call" /></a>
+                        <button onClick={handleSavePDF} className='cs-button cs-button--voicecall' title="Download Chat">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 3 20 20" id="download-chat" className='svg-inline--fa'><path d="M19,14a1,1,0,0,0-1.22.72A7,7,0,0,1,11,20H5.41l.64-.63a1,1,0,0,0,0-1.41A7,7,0,0,1,11,6a8.49,8.49,0,0,1,.88,0,1,1,0,1,0,.24-2A8.32,8.32,0,0,0,11,4,9,9,0,0,0,4,18.62L2.29,20.29a1,1,0,0,0-.21,1.09A1,1,0,0,0,3,22h8a9,9,0,0,0,8.72-6.75A1,1,0,0,0,19,14Zm2.71-6.74a1,1,0,0,0-1.42,0L19,8.59V3a1,1,0,0,0-2,0V8.59l-1.29-1.3a1,1,0,1,0-1.42,1.42l3,3a1,1,0,0,0,.33.21.94.94,0,0,0,.76,0,1,1,0,0,0,.33-.21l3-3A1,1,0,0,0,21.71,7.29Z"></path></svg>
+                        </button>
                       </ConversationHeader.Actions>                      
                   </ConversationHeader>   
             <MessageList 
               scrollBehavior="smooth" 
               typingIndicator={isTyping ? <TypingIndicator content="VistaBot is typing" /> : null}
-            >
+            ><div id="test" ref={chatContainerRef}>
               {messages.map((message, i) => {
                 console.log(message)
-                return <Message key={i} model={message} >
-                  <Avatar src={pic} name="Joe" />
-                  </Message>
+                return <Message key={i} model={message} />
               })}
+              </div>
             </MessageList>
             <MessageInput placeholder="Type message here" attachButton={false} onSend={handleSend} />        
           </ChatContainer>
@@ -163,8 +159,8 @@ function App() {
                       <button className='question_btn' onClick={() => handleSend('Tell me about the Corporate membership')}>What is your Corporate membership?</button>
                     </ExpansionPanel>
                     <ExpansionPanel title="Fleet">
-                      <button className='question_btn' onClick={() => handleSend('Tell me about the VistaJet Global fleet')}>Global Fleet</button>
-                      <button className='question_btn' onClick={() => handleSend('Tell me about the VistaJet continental fleet')}>Continental Fleet</button>
+                      <button className='question_btn' onClick={() => handleSend('Tell me about the VistaJet Global fleet')}>How far does your global fleet travel?</button>
+                      <button className='question_btn' onClick={() => handleSend('Tell me about the VistaJet continental fleet')}>How far does your continental fleet travel?</button>
                     </ExpansionPanel>
                     <ExpansionPanel title="Experience">
                       <button className='question_btn' onClick={() => handleSend('Tell me about the VistaJet Private Dining')}>Private Dining</button>
