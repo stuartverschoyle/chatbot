@@ -160,8 +160,8 @@ function App() {
                       <button className='question_btn' onClick={() => handleSend('Tell me about the Corporate membership')}>What is your Corporate membership?</button>
                     </ExpansionPanel>
                     <ExpansionPanel title="Fleet">
-                      <button className='question_btn' onClick={() => handleSend('Tell me about the VistaJet Global fleet')}>How far does your global fleet travel?</button>
-                      <button className='question_btn' onClick={() => handleSend('Tell me about the VistaJet continental fleet')}>How far does your continental fleet travel?</button>
+                      <button className='question_btn' onClick={() => handleSend('How far does your global fleet travel?')}>How far does your global fleet travel?</button>
+                      <button className='question_btn' onClick={() => handleSend('How far does your continental fleet travel?')}>How far does your continental fleet travel?</button>
                     </ExpansionPanel>
                     <ExpansionPanel title="Experience">
                       <button className='question_btn' onClick={() => handleSend('Tell me about the VistaJet Private Dining')}>Private Dining</button>
