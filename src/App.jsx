@@ -42,6 +42,12 @@ function App() {
     // How it responds, how it talks, etc.
     setIsTyping(true);
     await processMessageToChatGPT(newMessages);
+    await supabaseClient
+      .from('chatbotquestions')
+      .insert({message:message})
+      if (message){
+        console.log(message)
+      }
   };
 
   async function processMessageToChatGPT(chatMessages) { // messages is an array of messages
