@@ -6,8 +6,7 @@ import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, ConversationHeader, Avatar, VoiceCallButton, VideoCallButton, InfoButton, Sidebar, ExpansionPanel } from '@chatscope/chat-ui-kit-react';
 import { createClient } from "@supabase/supabase-js";
 import pic from './assets/vista.svg';
-import copyPDF from './assets/copy.svg';
-
+import vistabot from './assets/vistabot.jpg';
 const supabaseClient = createClient(import.meta.env.VITE_API_URL, import.meta.env.VITE_SUPABASE_API_KEY);
 
 
@@ -145,8 +144,10 @@ function App() {
               typingIndicator={isTyping ? <TypingIndicator content="VistaBot is typing" /> : null}
             ><div id="test" ref={chatContainerRef}>
               {messages.map((message, i) => {
-                console.log(message)
-                return <Message key={i} model={message} />
+                console.log(message.sender)
+                return <Message key={i} model={message}>
+                  {message.sender === "ChatGPT" ? <Avatar src={vistabot } /> : null} 
+                  </Message>
               })}
               </div>
             </MessageList>
