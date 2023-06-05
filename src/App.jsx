@@ -77,39 +77,39 @@ function App() {
       ]
     }
 
-     const { data, error } = await supabaseClient.functions.invoke('ask-custom-data', {
-          body: JSON.stringify({ query: JSON.stringify(apiRequestBody) }),
-        }).then((data) => {
-          console.log(data);
-          setMessages([...chatMessages, {
-            message: data.data.text,
-            sender: "ChatGPT"
-          }]);
-          setIsTyping(false);
-        });
-      console.log(data.text);
-      console.log(error);
+    //  const { data, error } = await supabaseClient.functions.invoke('ask-custom-data', {
+    //       body: JSON.stringify({ query: JSON.stringify(apiRequestBody) }),
+    //     }).then((data) => {
+    //       console.log(data);
+    //       setMessages([...chatMessages, {
+    //         message: data.data.text,
+    //         sender: "ChatGPT"
+    //       }]);
+    //       setIsTyping(false);
+    //     });
+    //   console.log(data.text);
+    //   console.log(error);
 
   
 
-    // await fetch("https://api.openai.com/v1/chat/completions", 
-    // {
-    //   method: "POST",
-    //   headers: {
-    //     "Authorization": "Bearer " + API_KEY,
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify(apiRequestBody)
-    // }).then((data) => {
-    //   return data.json();
-    // }).then((data) => {
-    //   console.log(data);
-    //   setMessages([...chatMessages, {
-    //     message: data.choices[0].message.content,
-    //     sender: "ChatGPT"
-    //   }]);
-    //   setIsTyping(false);
-    // });
+    await fetch("https://api.openai.com/v1/chat/completions", 
+    {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + API_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(apiRequestBody)
+    }).then((data) => {
+      return data.json();
+    }).then((data) => {
+      console.log(data);
+      setMessages([...chatMessages, {
+        message: data.choices[0].message.content,
+        sender: "ChatGPT"
+      }]);
+      setIsTyping(false);
+    });
   }
 
 
