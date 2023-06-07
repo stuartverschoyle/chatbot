@@ -14,7 +14,7 @@ const API_KEY = import.meta.env.VITE_OPENAIAPIKEY;
 
 // "Explain things like you would to a 10 year old learning how to code."
 const systemMessage = { //  Explain things like you're talking to a software professional with 5 years of experience.
-  "role": "system", "content": "Explain things like you're talking to a high networth individuals"
+  "role": "system", "content": "Explain things like you're talking to a high networth individual"
 }
 
 function App() {
@@ -148,7 +148,8 @@ function App() {
             <MessageList 
               scrollBehavior="smooth" 
               typingIndicator={isTyping ? <TypingIndicator content="VistaBot is typing" /> : null}
-            ><div id="test" ref={chatContainerRef}>
+            >
+              <div id="test" ref={chatContainerRef}>
               {messages.map((message, i) => {
                 console.log(message.sender)
                 return <Message key={i} model={message}>
