@@ -19,6 +19,7 @@
 }
 .chatContainer {
   min-height:600px;
+  height: 600px;
 }
 
 .cs-message-list .scrollbar-container {
