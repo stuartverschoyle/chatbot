@@ -18,10 +18,7 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 .chatContainer {
-  position:relative;
-  height: 600px;
   min-height:600px;
-  width: 500px;
 }
 
 .cs-message-list .scrollbar-container {
