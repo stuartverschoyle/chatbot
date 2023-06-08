@@ -1,5 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import html2pdf from 'html2pdf.js';
+import { v4 as uuidv4 } from 'uuid';
 
 import './App.css'
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
@@ -7,17 +8,21 @@ import { MainContainer, ChatContainer, MessageList, Message, MessageInput, Typin
 import { createClient } from "@supabase/supabase-js";
 import pic from './assets/vista.svg';
 import vistabot from './assets/vistabot.jpg';
+
 const supabaseClient = createClient(import.meta.env.VITE_API_URL, import.meta.env.VITE_SUPABASE_API_KEY);
 
 
 const API_KEY = import.meta.env.VITE_OPENAIAPIKEY;
 
+
 // "Explain things like you would to a 10 year old learning how to code."
 const systemMessage = { //  Explain things like you're talking to a software professional with 5 years of experience.
   "role": "system", "content": "Explain things like you're talking to a high networth individual"
 }
-
 function App() {
+
+  const tempUser = uuidv4();
+
   const [messages, setMessages] = useState([
     {
       message: "<p>Hello and welcome to the VistaJet chatbot. I am here to help you with any queries you may have.</p><p>On the right hand side are quick links, why not click on one of the button to find out more. Or ask your own question below.</p>",
@@ -27,6 +32,7 @@ function App() {
   ]);
   const [isTyping, setIsTyping] = useState(false);
 
+ 
   const handleSend = async (message) => {
     const newMessage = {
       message,
@@ -44,7 +50,7 @@ function App() {
     await processMessageToChatGPT(newMessages);
     await supabaseClient
       .from('chatbotquestions')
-      .insert({message:message})
+      .insert({message:message,"cookie_user":tempUser})
       if (message){
         console.log(message)
       }
@@ -123,6 +129,40 @@ function App() {
       .save('vistajet-chat-transcription.pdf');
     };
 
+      const [faqs, setFaqs] = useState([]);
+      const [displayedQuestions, setDisplayedQuestions] = useState([]);
+
+    
+
+    useEffect(() => {
+      async function fetchFaqs() {
+ 
+        const { data, error } = await supabaseClient.from('chatbotquestions').select('*').order('id', { ascending: false }).limit(5);
+
+        if (error) {
+          console.error('Error fetching FAQs:', error.message);
+        } else {
+          setFaqs(data);
+          console.log(data);
+
+        }
+      }
+  
+      fetchFaqs();
+    }, []);
+  
+  
+    const isQuestionDisplayed = (question) => {
+      return displayedQuestions.includes(question);
+    };
+
+    const addQuestionMark = (str) => {
+      if (!str.endsWith('?')) {
+        return str + '?';
+      }
+      return str;
+    };      
+
   return (
     <div className="App">
       <div className="chatContainer">
@@ -151,7 +191,6 @@ function App() {
             >
               <div id="test" ref={chatContainerRef}>
               {messages.map((message, i) => {
-                console.log(message.sender)
                 return <Message key={i} model={message}>
                   {message.sender === "ChatGPT" ? <Avatar src={vistabot } /> : null} 
                   </Message>
@@ -161,28 +200,44 @@ function App() {
             <MessageInput placeholder="Type message here" attachButton={false} onSend={handleSend} />        
           </ChatContainer>
           <Sidebar position="right">
-                    <ExpansionPanel open title="Memberships">
-                      <button className='question_btn' onClick={() => handleSend('Tell me about the Program membership')}>What is your Program membership?</button>
-                      <button className='question_btn' onClick={() => handleSend('Tell me about the VJ25 membership')}>What is your VJ25 membership?</button>
-                      <button className='question_btn' onClick={() => handleSend('Tell me about the Corporate membership')}>What is your Corporate membership?</button>
-                    </ExpansionPanel>
-                    <ExpansionPanel title="Fleet">
-                      <button className='question_btn' onClick={() => handleSend('How far does your global fleet travel?')}>How far does your global fleet travel?</button>
-                      <button className='question_btn' onClick={() => handleSend('How far does your continental fleet travel?')}>How far does your continental fleet travel?</button>
-                    </ExpansionPanel>
-                    <ExpansionPanel title="Experience">
-                      <button className='question_btn' onClick={() => handleSend('Tell me about the VistaJet Private Dining')}>Private Dining</button>
-                      <button className='question_btn' onClick={() => handleSend('Tell me about Wine in the sky')}>Wine in the sky</button>
-                      <button className='question_btn' onClick={() => handleSend('Tell me about the Adventures in the sky')}>Adventures in the sky</button>
-                      <button className='question_btn' onClick={() => handleSend('Tell me about VistaPet')}>VistaPet</button>
-                    </ExpansionPanel>
-                    <ExpansionPanel title="Broker questions">
-                    <button className='question_btn' onClick={() => handleSend('list the global fleet air crafts?')}>What jets are in your Global Fleet?</button>
-                    <button className='question_btn' onClick={() => handleSend('list the continental fleet air crafts?')}>What jets are in your Continental Fleet?</button>
-                    </ExpansionPanel>       
-                    <button className='save-btn' onClick={handleSavePDF}>Save chat (pdf)</button>
+            <div className='sidebar-head'>
+              <h2>Useful Questions</h2>
+              <p>Below are a series of useful questions of topics that may help you find your question even faster.</p>
+            </div>
             
-                  </Sidebar>               
+              <ExpansionPanel open title="Recently Asked Questions">
+              {faqs.map((faq) => (
+                !isQuestionDisplayed(faq.question) && (
+                  <div key={faq.id}>
+                    <button className='question_btn' onClick={() => handleSend(faq.message)}>
+                    {addQuestionMark(faq.message)}
+                    </button>
+                  </div>
+                )
+              ))}
+            </ExpansionPanel>
+            <ExpansionPanel title="Memberships">
+              <button className='question_btn' onClick={() => handleSend('Tell me about the Program membership')}>What is your Program membership?</button>
+              <button className='question_btn' onClick={() => handleSend('Tell me about the VJ25 membership')}>What is your VJ25 membership?</button>
+              <button className='question_btn' onClick={() => handleSend('Tell me about the Corporate membership')}>What is your Corporate membership?</button>
+            </ExpansionPanel>
+            <ExpansionPanel title="Fleet">
+              <button className='question_btn' onClick={() => handleSend('How far does your global fleet travel?')}>How far does your global fleet travel?</button>
+              <button className='question_btn' onClick={() => handleSend('How far does your continental fleet travel?')}>How far does your continental fleet travel?</button>
+            </ExpansionPanel>
+            <ExpansionPanel title="Experience">
+              <button className='question_btn' onClick={() => handleSend('Tell me about the VistaJet Private Dining')}>Private Dining</button>
+              <button className='question_btn' onClick={() => handleSend('Tell me about Wine in the sky')}>Wine in the sky</button>
+              <button className='question_btn' onClick={() => handleSend('Tell me about the Adventures in the sky')}>Adventures in the sky</button>
+              <button className='question_btn' onClick={() => handleSend('Tell me about VistaPet')}>VistaPet</button>
+            </ExpansionPanel>
+            <ExpansionPanel title="Broker questions">
+            <button className='question_btn' onClick={() => handleSend('list the global fleet air crafts?')}>What jets are in your Global Fleet?</button>
+            <button className='question_btn' onClick={() => handleSend('list the continental fleet air crafts?')}>What jets are in your Continental Fleet?</button>
+            </ExpansionPanel>         
+          
+        </Sidebar>               
+                  <button className='save-btn' onClick={handleSavePDF}>Save chat (pdf)</button>
         </MainContainer>
       </div>
     </div>
